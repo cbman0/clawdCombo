@@ -9,7 +9,7 @@ The HTML UI is split by single-purpose modules under `ui/public/modules`:
 - `swap.js` — swap quote retrieval (aggregator)
 - `tokens.js` — custom token registry management
 - `oracles.js` — multi-source price checks
-- `arb.js` — gap scanner + threshold trigger
+- `arb.js` — gap scanner + threshold trigger + persisted watchlist run
 - `history.js` — transaction history viewer
 - `app.js` — main class-based composition entrypoint
 

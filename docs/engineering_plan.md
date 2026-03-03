@@ -21,7 +21,10 @@
    - slippage validation against quote response
    - max gas / max value guardrails
    - post-trade balance delta report
-2. Oracle resilience
+2. Persistent watchlist scheduling
+   - run loop worker using saved intervalSec
+   - optional Telegram/Discord alert hooks for triggered opportunities
+3. Oracle resilience
    - normalize POL symbols across providers
    - add fallback provider adapter interface
 3. Arbitrage board

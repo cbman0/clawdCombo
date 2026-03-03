@@ -7,6 +7,8 @@ const { transferAmoy, nativeBalance, tokenBalance, quoteSwap } = require("../cli
 const { readTxLog } = require("../cli/store");
 const { scanPairGap } = require("../cli/arb");
 const { scanWatchlist } = require("../cli/strategies/arb-watchlist");
+const { runOnce } = require("../cli/strategies/arb-runner");
+const { getWatchlist, saveWatchlist } = require("../cli/watchlist-registry");
 const { executeSwap } = require("../cli/swap-exec");
 const { PriceOracleService } = require("../cli/services/PriceOracleService");
 const { TokenRegistryService } = require("../cli/services/TokenRegistryService");
@@ -42,6 +44,7 @@ app.get(
       backupPassword: !!process.env.WALLET_BACKUP_PASSWORD,
       liveSwap: process.env.ENABLE_LIVE_SWAP === "true",
     },
+    watchlist: getWatchlist(),
   }))
 );
 
@@ -118,11 +121,22 @@ app.post(
   })
 );
 
+app.get("/api/arb/watchlist", safeAsync(async () => getWatchlist()));
+
 app.post(
   "/api/arb/watchlist",
   safeAsync(async (req) => {
-    const { pairs = [], thresholdPct = 1 } = req.body || {};
-    return scanWatchlist({ pairs, thresholdPct });
+    const { pairs = [], thresholdPct = 1, intervalSec = 60 } = req.body || {};
+    return saveWatchlist({ pairs, thresholdPct, intervalSec });
+  })
+);
+
+app.post(
+  "/api/arb/watchlist/run",
+  safeAsync(async (req) => {
+    const body = req.body || {};
+    const cfg = body.pairs ? body : getWatchlist();
+    return runOnce({ pairs: cfg.pairs || [], thresholdPct: Number(cfg.thresholdPct || 1) });
   })
 );
 
