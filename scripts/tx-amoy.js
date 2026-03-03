@@ -27,11 +27,23 @@ function logTx(entry) {
   fs.writeFileSync(TX_LOG, JSON.stringify(existing, null, 2));
 }
 
+function resolveAmountPol() {
+  const preset = (process.env.AMOY_AMOUNT_PRESET || "").toLowerCase();
+  const presetMap = {
+    low: "0.0001",
+    medium: "0.001",
+    high: "0.002",
+  };
+  if (process.env.AMOY_AMOUNT_POL) return process.env.AMOY_AMOUNT_POL;
+  if (presetMap[preset]) return presetMap[preset];
+  return "0.001";
+}
+
 async function main() {
   const password = process.env.WALLET_BACKUP_PASSWORD;
   const fromAlias = process.env.FROM_ALIAS || "devA";
   const toAlias = process.env.TO_ALIAS || "devB";
-  const amountPol = process.env.AMOY_AMOUNT_POL || "0.001";
+  const amountPol = resolveAmountPol();
   const seedPol = process.env.AMOY_SEED_POL || "0.01";
   const rpcUrl = process.env.AMOY_RPC_URL || "https://rpc-amoy.polygon.technology";
   const funderPk = process.env.FUNDER_PRIVATE_KEY || process.env.DEPLOYER_PRIVATE_KEY;

@@ -46,3 +46,17 @@ It will:
 2. optionally seed sender wallet from funder
 3. send POL from one managed wallet to another
 4. log tx history to `.clawdcombo/tx-history.json`
+
+## HTML UI (CLI-backed)
+Start local UI:
+```bash
+npm run ui:start
+```
+Open:
+- `http://127.0.0.1:4173`
+
+This UI calls backend endpoints that execute the CLI script (`scripts/tx-amoy.js`) in the background.
+Preset amounts:
+- low = `0.0001`
+- medium = `0.001`
+- high = `0.002`

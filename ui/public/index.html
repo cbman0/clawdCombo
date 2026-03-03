@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>clawdCombo Transfer UI</title>
+    <style>
+      body { font-family: Arial, sans-serif; max-width: 840px; margin: 24px auto; padding: 0 16px; }
+      .card { border: 1px solid #ddd; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+      label { display: block; margin-top: 10px; font-weight: 600; }
+      input, select, button { margin-top: 6px; padding: 8px; width: 100%; }
+      button { cursor: pointer; }
+      pre { background: #111; color: #ddd; padding: 12px; border-radius: 8px; overflow: auto; }
+    </style>
+  </head>
+  <body>
+    <h1>clawdCombo — Amoy Transfer UI</h1>
+    <p>Local-only interface (CLI-backed). Uses encrypted wallet backups and env credentials.</p>
+
+    <div class="card">
+      <h3>Status</h3>
+      <pre id="status">loading...</pre>
+      <button onclick="loadStatus()">Refresh Status</button>
+    </div>
+
+    <div class="card">
+      <h3>Send Transfer</h3>
+      <label>From Alias</label>
+      <input id="fromAlias" value="devA" />
+
+      <label>To Alias</label>
+      <input id="toAlias" value="devB" />
+
+      <label>Amount Preset</label>
+      <select id="preset">
+        <option value="low">low (0.0001)</option>
+        <option value="medium" selected>medium (0.001)</option>
+        <option value="high">high (0.002)</option>
+      </select>
+
+      <label>Custom Amount POL (optional, overrides preset)</label>
+      <input id="amountPol" placeholder="e.g. 0.0007" />
+
+      <button onclick="sendTransfer()">Send Transaction</button>
+    </div>
+
+    <div class="card">
+      <h3>Result</h3>
+      <pre id="result">No transaction yet.</pre>
+    </div>
+
+    <script>
+      async function loadStatus() {
+        const res = await fetch('/api/status');
+        const json = await res.json();
+        document.getElementById('status').textContent = JSON.stringify(json, null, 2);
+      }
+
+      async function sendTransfer() {
+        const body = {
+          fromAlias: document.getElementById('fromAlias').value.trim(),
+          toAlias: document.getElementById('toAlias').value.trim(),
+          preset: document.getElementById('preset').value,
+          amountPol: document.getElementById('amountPol').value.trim() || undefined,
+        };
+
+        const res = await fetch('/api/transfer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+
+        const json = await res.json();
+        document.getElementById('result').textContent = JSON.stringify(json, null, 2);
+      }
+
+      loadStatus();
+    </script>
+  </body>
+</html>
