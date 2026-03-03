@@ -8,11 +8,15 @@ import { oraclesView, bindOracles } from './oracles.js';
 import { swapView, bindSwap } from './swap.js';
 import { arbView, bindArb } from './arb.js';
 import { historyView, bindHistory } from './history.js';
+import { getMode, modeToggleView, bindModeToggle } from './mode.js';
 
 class ClawdComboApp {
   mount(rootId = 'app') {
     const root = document.getElementById(rootId);
+    const mode = getMode();
+
     root.innerHTML = `
+      ${modeToggleView()}
       <div class="grid">
         ${statusView()}
         ${walletsView()}
@@ -21,12 +25,13 @@ class ClawdComboApp {
         ${portfolioView()}
         ${catalogView()}
         ${oraclesView()}
-        ${swapView()}
+        ${swapView(mode)}
         ${arbView()}
         ${historyView()}
       </div>
     `;
 
+    bindModeToggle(() => this.mount(rootId));
     bindStatus();
     bindWallets();
     bindTokens();
@@ -34,7 +39,7 @@ class ClawdComboApp {
     bindPortfolio();
     bindCatalog();
     bindOracles();
-    bindSwap();
+    bindSwap(mode);
     bindArb();
     bindHistory();
   }
