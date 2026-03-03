@@ -12,11 +12,14 @@
     "tx:demo:local": "hardhat run scripts/tx-demo.js",
     "tx:demo:amoy": "node scripts/tx-amoy.js",
     "ui:start": "node ui/server.js",
-    "catalog:sync": "node scripts/catalog-sync.js"
+    "catalog:sync": "node scripts/catalog-sync.js",
+    "desktop:start": "node desktop/launcher.js"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "hardhat": "^2.22.0"
+    "electron": "^31.7.7",
+    "hardhat": "^2.22.0",
+    "wait-on": "^7.2.0"
   },
   "dependencies": {
     "dotenv": "^16.6.1",

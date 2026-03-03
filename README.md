@@ -27,6 +27,9 @@ A Furucombo-inspired DeFi strategy executor focused on transparent, modular acti
 - `contracts/core` — core execution contracts
 - `contracts/interfaces` — adapter + callback interfaces
 - `contracts/libraries` — shared types/validation helpers
+- `cli` — headless service modules and strategy logic
+- `ui` — modular HTML GUI + local API server
+- `desktop` — Electron one-click desktop launcher
 - `scripts` — deployment + verification scripts
 - `docs` — research, architecture, deployed-address notes
 - `config` — chain configs
