@@ -4,31 +4,37 @@ import { toast } from './notify.js';
 export function swapView(mode = 'easy') {
   const isAdvanced = mode === 'advanced';
   return `
-    <div class="card">
-      <h3>Swap Desk</h3>
-      <p class="muted">Uniswap-style two token flow. Quote first, then dry-run execute. Live execution stays guarded by backend env.</p>
+    <div class="card feature-card swap-card">
+      <div class="section-head">
+        <div>
+          <h3>Swap Desk</h3>
+          <p class="muted">Uniswap-style token swap flow with cleaner guardrails. Quote first, then simulate or execute.</p>
+        </div>
+        <span class="pill ${isAdvanced ? 'pill-live' : 'pill-safe'}">${isAdvanced ? 'Advanced • Live option unlocked' : 'Easy • Simulation only'}</span>
+      </div>
 
       <div class="row">
         <div>
-          <label>From alias</label><input id="swapFromAlias" value="devA" />
+          <label>Wallet Alias</label><input id="swapFromAlias" value="devA" placeholder="devA" />
         </div>
         <div>
-          <label>Taker address (quote)</label><input id="takerAddress" placeholder="0x..." />
+          <label>Taker Address (for quote)</label><input id="takerAddress" placeholder="0x..." />
+        </div>
+      </div>
+
+      <div class="token-stack">
+        <div>
+          <label>Sell Token</label><input id="sellToken" value="NATIVE" placeholder="NATIVE or 0x..." />
+        </div>
+        <div class="swap-divider">↓</div>
+        <div>
+          <label>Buy Token</label><input id="buyToken" placeholder="0x..." />
         </div>
       </div>
 
       <div class="row">
         <div>
-          <label>Sell token (address or NATIVE)</label><input id="sellToken" value="NATIVE" />
-        </div>
-        <div>
-          <label>Buy token (address)</label><input id="buyToken" placeholder="0x..." />
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label>Sell amount (base units)</label><input id="sellAmount" placeholder="1000000000000000" />
+          <label>Sell Amount (base units)</label><input id="sellAmount" placeholder="1000000000000000" />
         </div>
         <div>
           <label>Slippage (bps)</label><input id="slippageBps" value="100" ${isAdvanced ? '' : 'disabled'} />
@@ -36,11 +42,12 @@ export function swapView(mode = 'easy') {
       </div>
 
       <div class="row">
-        <button id="quoteBtn" class="alt">Get Swap Quote</button>
-        <button id="swapDryBtn">Dry-run Execute</button>
+        <button id="quoteBtn" class="alt">Get Quote</button>
+        <button id="swapDryBtn">Run Dry Swap</button>
       </div>
-      ${isAdvanced ? '<button id="swapLiveBtn">Live Execute</button>' : ''}
-      <pre id="swapOut">No swap data yet.</pre>
+      ${isAdvanced ? '<button id="swapLiveBtn">Execute Live Swap</button>' : ''}
+      <pre id="swapOut" class="state-panel">Waiting for quote or swap action.
+Tip: start with “Get Quote” to verify route + expected output.</pre>
     </div>
   `;
 }

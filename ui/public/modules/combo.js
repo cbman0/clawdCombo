@@ -17,9 +17,14 @@ function defaultDraft() {
 
 export function comboView() {
   return `
-    <div class="card">
-      <h3>Strategy Composer (Furucombo-inspired)</h3>
-      <p class="muted">Create a flashloan pipeline draft, validate JSON, and persist locally before compiler integration lands.</p>
+    <div class="card feature-card strategy-card">
+      <div class="section-head">
+        <div>
+          <h3>Strategy Composer</h3>
+          <p class="muted">Furucombo-inspired planning lane. Draft your flashloan pipeline JSON, save locally, then validate structure.</p>
+        </div>
+        <span class="pill pill-accent">Local Draft Mode</span>
+      </div>
 
       <div class="row">
         <div>
@@ -27,19 +32,20 @@ export function comboView() {
           <input id="comboName" placeholder="flash-arb-starter" />
         </div>
         <div>
-          <label>Chain</label>
+          <label>Target Chain</label>
           <input id="comboChain" placeholder="polygon-amoy" />
         </div>
       </div>
 
       <label>Pipeline JSON</label>
-      <textarea id="comboJson" rows="12"></textarea>
+      <textarea id="comboJson" rows="12" placeholder="Paste or build strategy JSON here..."></textarea>
       <div class="row">
-        <button id="comboTemplateBtn" class="alt">Load Starter Template</button>
+        <button id="comboTemplateBtn" class="alt">Load Starter</button>
         <button id="comboSaveBtn">Save Draft</button>
       </div>
-      <button id="comboValidateBtn">Validate Strategy</button>
-      <pre id="comboOut">No strategy output yet.</pre>
+      <button id="comboValidateBtn">Validate Strategy Shape</button>
+      <pre id="comboOut" class="state-panel">No validation run yet.
+Tip: click “Load Starter” to begin from a known-good baseline.</pre>
     </div>
   `;
 }
