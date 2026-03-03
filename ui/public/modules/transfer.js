@@ -1,4 +1,5 @@
 import { api } from './api.js';
+import { toast } from './notify.js';
 
 export function transferView() {
   return `
@@ -31,8 +32,10 @@ export function bindTransfer() {
       };
       const result = await api('/api/transfer', 'POST', body);
       out.textContent = JSON.stringify(result, null, 2);
+      toast('Transfer submitted', 'success');
     } catch (e) {
       out.textContent = e.message;
+      toast(`Transfer failed: ${e.message}`, 'error');
     }
   };
 }

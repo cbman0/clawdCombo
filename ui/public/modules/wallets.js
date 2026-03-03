@@ -1,4 +1,5 @@
 import { api } from './api.js';
+import { toast } from './notify.js';
 
 export function walletsView() {
   return `
@@ -21,6 +22,7 @@ export function bindWallets() {
       out.textContent = JSON.stringify(data, null, 2);
     } catch (e) {
       out.textContent = e.message;
+      toast(`Wallet list failed: ${e.message}`, 'error');
     }
   };
 
@@ -29,9 +31,11 @@ export function bindWallets() {
     try {
       const result = await api('/api/wallet/create', 'POST', { alias });
       out.textContent = JSON.stringify(result, null, 2);
+      toast(`Wallet created: ${alias || 'unnamed'}`, 'success');
       await refresh();
     } catch (e) {
       out.textContent = e.message;
+      toast(`Wallet create failed: ${e.message}`, 'error');
     }
   };
 

@@ -1,4 +1,5 @@
 import { api } from './api.js';
+import { toast } from './notify.js';
 
 export function swapView(mode = 'easy') {
   const isAdvanced = mode === 'advanced';
@@ -33,8 +34,10 @@ export function bindSwap(mode = 'easy') {
         takerAddress: document.getElementById('takerAddress').value.trim(),
       });
       out.textContent = JSON.stringify(result, null, 2);
+      toast('Swap quote fetched', 'success');
     } catch (e) {
       out.textContent = e.message;
+      toast(`Swap quote failed: ${e.message}`, 'error');
     }
   };
 
@@ -50,8 +53,10 @@ export function bindSwap(mode = 'easy') {
         dryRun: true,
       });
       out.textContent = JSON.stringify(result, null, 2);
+      toast('Swap dry-run completed', 'success');
     } catch (e) {
       out.textContent = e.message;
+      toast(`Swap dry-run failed: ${e.message}`, 'error');
     }
   };
 
@@ -68,8 +73,10 @@ export function bindSwap(mode = 'easy') {
           dryRun: false,
         });
         out.textContent = JSON.stringify(result, null, 2);
+        toast('Swap live execution submitted', 'success');
       } catch (e) {
         out.textContent = e.message;
+        toast(`Swap live execution failed: ${e.message}`, 'error');
       }
     };
   }

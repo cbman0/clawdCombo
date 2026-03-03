@@ -9,6 +9,7 @@ import { swapView, bindSwap } from './swap.js';
 import { arbView, bindArb } from './arb.js';
 import { historyView, bindHistory } from './history.js';
 import { getMode, modeToggleView, bindModeToggle } from './mode.js';
+import { initToasts } from './notify.js';
 
 class ClawdComboApp {
   mount(rootId = 'app') {
@@ -17,6 +18,7 @@ class ClawdComboApp {
 
     root.innerHTML = `
       ${modeToggleView()}
+      ${mode === 'easy' ? '<p class="muted">Easy Mode: advanced analytics panels are hidden for a cleaner GUI. Switch to Advanced anytime.</p>' : ''}
       <div class="grid">
         ${statusView()}
         ${walletsView()}
@@ -24,13 +26,14 @@ class ClawdComboApp {
         ${transferView()}
         ${portfolioView()}
         ${catalogView()}
-        ${oraclesView()}
         ${swapView(mode)}
-        ${arbView()}
-        ${historyView()}
+        ${mode === 'advanced' ? oraclesView() : ''}
+        ${mode === 'advanced' ? arbView() : ''}
+        ${mode === 'advanced' ? historyView() : ''}
       </div>
     `;
 
+    initToasts();
     bindModeToggle(() => this.mount(rootId));
     bindStatus();
     bindWallets();
@@ -38,10 +41,13 @@ class ClawdComboApp {
     bindTransfer();
     bindPortfolio();
     bindCatalog();
-    bindOracles();
     bindSwap(mode);
-    bindArb();
-    bindHistory();
+
+    if (mode === 'advanced') {
+      bindOracles();
+      bindArb();
+      bindHistory();
+    }
   }
 }
 
