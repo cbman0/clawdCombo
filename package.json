@@ -13,6 +13,7 @@
     "tx:demo:amoy": "node scripts/tx-amoy.js",
     "ui:start": "node ui/server.js",
     "catalog:sync": "node scripts/catalog-sync.js",
+    "watchlist:scheduler": "node scripts/watchlist-scheduler.js",
     "desktop:start": "node desktop/launcher.js"
   },
   "devDependencies": {

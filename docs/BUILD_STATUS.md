@@ -35,6 +35,6 @@
 ## Next Milestones
 - [x] Swap execution hardening (slippage/gas guardrails + post-trade deltas)
 - [ ] Oracle normalization + fallback reliability improvements
-- [ ] Watchlist scheduler (interval runner + optional alert hooks)
+- [x] Watchlist scheduler (interval runner + optional alert hooks)
 - [ ] Strategy compiler (Furucombo-like JSON pipeline)
 - [ ] Adapter expansion (Uniswap/1inch/Aave-style production adapters)
