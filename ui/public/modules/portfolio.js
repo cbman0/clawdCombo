@@ -3,12 +3,16 @@ import { api } from './api.js';
 export function portfolioView() {
   return `
     <div class="card">
-      <h3>Assets (Rainbow-style quick view)</h3>
-      <p class="muted">Native and custom ERC-20 balance checks.</p>
-      <label>Address</label><input id="balAddress" placeholder="0x..." />
-      <button id="nativeBalBtn">Get Native POL</button>
+      <h3>Portfolio Snapshot</h3>
+      <p class="muted">Rainbow-style quick readability: one address, fast native/token checks.</p>
+      <label>Wallet address</label><input id="balAddress" placeholder="0x..." />
+
+      <div class="row">
+        <button id="nativeBalBtn" class="alt">Get Native POL</button>
+        <button id="tokenBalBtn">Get Token Balance</button>
+      </div>
+
       <label>Token contract (ERC-20)</label><input id="tokenAddress" placeholder="0x..." />
-      <button id="tokenBalBtn">Get Token Balance</button>
       <pre id="portfolioOut">No data yet.</pre>
     </div>
   `;

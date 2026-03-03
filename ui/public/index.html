@@ -3,14 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>clawdCombo Modular UI</title>
+    <title>clawdCombo Terminal+UI</title>
     <link rel="stylesheet" href="/styles/main.css" />
   </head>
   <body>
-    <h1>clawdCombo Control Panel</h1>
-    <p>CLI-backed wallet operations for Polygon Amoy.</p>
+    <div class="bg-orb orb-a"></div>
+    <div class="bg-orb orb-b"></div>
 
-    <div id="app"></div>
+    <main class="app-shell">
+      <header class="hero">
+        <div>
+          <p class="badge">clawdCombo • CLI-backed DeFi workstation</p>
+          <h1>Trade, Arbitrage, Flashloans — one desk</h1>
+          <p class="hero-sub">Uniswap-style swap flow + Furucombo-inspired strategy composition, powered by your local CLI/API modules.</p>
+        </div>
+      </header>
+
+      <div id="app"></div>
+    </main>
 
     <script type="module" src="/modules/app.js"></script>
   </body>

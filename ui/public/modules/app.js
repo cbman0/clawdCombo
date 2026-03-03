@@ -8,6 +8,7 @@ import { oraclesView, bindOracles } from './oracles.js';
 import { swapView, bindSwap } from './swap.js';
 import { arbView, bindArb } from './arb.js';
 import { historyView, bindHistory } from './history.js';
+import { comboView, bindCombo } from './combo.js';
 import { getMode, modeToggleView, bindModeToggle } from './mode.js';
 import { initToasts } from './notify.js';
 
@@ -18,15 +19,16 @@ class ClawdComboApp {
 
     root.innerHTML = `
       ${modeToggleView()}
-      ${mode === 'easy' ? '<p class="muted">Easy Mode: advanced analytics panels are hidden for a cleaner GUI. Switch to Advanced anytime.</p>' : ''}
+      ${mode === 'easy' ? '<p class="muted">Easy Mode shows the core trading desk. Switch to Advanced for arbitrage/oracle/history tooling.</p>' : ''}
       <div class="grid">
+        ${swapView(mode)}
+        ${portfolioView()}
         ${statusView()}
         ${walletsView()}
         ${tokensView()}
         ${transferView()}
-        ${portfolioView()}
         ${catalogView()}
-        ${swapView(mode)}
+        ${comboView()}
         ${mode === 'advanced' ? oraclesView() : ''}
         ${mode === 'advanced' ? arbView() : ''}
         ${mode === 'advanced' ? historyView() : ''}
@@ -35,13 +37,14 @@ class ClawdComboApp {
 
     initToasts();
     bindModeToggle(() => this.mount(rootId));
+    bindSwap(mode);
+    bindPortfolio();
     bindStatus();
     bindWallets();
     bindTokens();
     bindTransfer();
-    bindPortfolio();
     bindCatalog();
-    bindSwap(mode);
+    bindCombo();
 
     if (mode === 'advanced') {
       bindOracles();

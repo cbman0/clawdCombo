@@ -5,16 +5,40 @@ export function swapView(mode = 'easy') {
   const isAdvanced = mode === 'advanced';
   return `
     <div class="card">
-      <h3>Swap Desk (Uniswap-like flow)</h3>
-      <p class="muted">Step 1: quote, Step 2: dry-run execute, Step 3: live execute only if enabled server-side.</p>
-      <label>From alias</label><input id="swapFromAlias" value="devA" />
-      <label>Sell token (address or NATIVE)</label><input id="sellToken" value="NATIVE" />
-      <label>Buy token (address)</label><input id="buyToken" placeholder="0x..." />
-      <label>Sell amount (base units)</label><input id="sellAmount" placeholder="1000000000000000" />
-      <label>Taker address (quote only)</label><input id="takerAddress" placeholder="0x..." />
-      ${isAdvanced ? '<label>Slippage Bps</label><input id="slippageBps" value="100" />' : ''}
-      <button id="quoteBtn">Get Swap Quote</button>
-      <button id="swapDryBtn">Dry-run Execute</button>
+      <h3>Swap Desk</h3>
+      <p class="muted">Uniswap-style two token flow. Quote first, then dry-run execute. Live execution stays guarded by backend env.</p>
+
+      <div class="row">
+        <div>
+          <label>From alias</label><input id="swapFromAlias" value="devA" />
+        </div>
+        <div>
+          <label>Taker address (quote)</label><input id="takerAddress" placeholder="0x..." />
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Sell token (address or NATIVE)</label><input id="sellToken" value="NATIVE" />
+        </div>
+        <div>
+          <label>Buy token (address)</label><input id="buyToken" placeholder="0x..." />
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Sell amount (base units)</label><input id="sellAmount" placeholder="1000000000000000" />
+        </div>
+        <div>
+          <label>Slippage (bps)</label><input id="slippageBps" value="100" ${isAdvanced ? '' : 'disabled'} />
+        </div>
+      </div>
+
+      <div class="row">
+        <button id="quoteBtn" class="alt">Get Swap Quote</button>
+        <button id="swapDryBtn">Dry-run Execute</button>
+      </div>
       ${isAdvanced ? '<button id="swapLiveBtn">Live Execute</button>' : ''}
       <pre id="swapOut">No swap data yet.</pre>
     </div>
