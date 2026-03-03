@@ -29,5 +29,20 @@ This will:
 3. Send ETH from `devA` -> `devB`
 4. Log receipt + balances to `.clawdcombo/tx-history.json`
 
-## Notes for real testnet transfers (Amoy)
-To move real Amoy POL between managed wallets, add a funded private key flow next (`FUNDER_PRIVATE_KEY`) and run against `--network amoy`.
+## Real Polygon Amoy transfer demo
+Populate `.env` with:
+- `WALLET_BACKUP_PASSWORD`
+- `AMOY_RPC_URL`
+- `FUNDER_PRIVATE_KEY` (or `DEPLOYER_PRIVATE_KEY`)
+- optional: `FROM_ALIAS`, `TO_ALIAS`, `AMOY_AMOUNT_POL`, `AMOY_SEED_POL`
+
+Then run:
+```bash
+npm run tx:demo:amoy
+```
+
+It will:
+1. decrypt wallet aliases from hidden backups
+2. optionally seed sender wallet from funder
+3. send POL from one managed wallet to another
+4. log tx history to `.clawdcombo/tx-history.json`

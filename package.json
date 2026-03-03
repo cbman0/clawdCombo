@@ -9,13 +9,15 @@
     "demo": "hardhat run scripts/demoExecute.js",
     "wallet:create": "node scripts/wallet-cli.js wallet:create",
     "wallet:list": "node scripts/wallet-cli.js wallet:list",
-    "tx:demo:local": "hardhat run scripts/tx-demo.js"
+    "tx:demo:local": "hardhat run scripts/tx-demo.js",
+    "tx:demo:amoy": "node scripts/tx-amoy.js"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "hardhat": "^2.22.0"
   },
   "dependencies": {
+    "dotenv": "^16.6.1",
     "ethers": "^6.16.0"
   }
 }
