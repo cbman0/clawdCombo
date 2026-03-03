@@ -8,5 +8,7 @@ if [ ! -d node_modules ]; then
   npm install
 fi
 
-# Start local UI server
+# Start local UI server (WSL + Windows browser friendly)
+export UI_HOST="${UI_HOST:-0.0.0.0}"
+export UI_PORT="${UI_PORT:-4173}"
 npm run ui:start

@@ -16,6 +16,7 @@ const { TokenRegistryService } = require("../cli/services/TokenRegistryService")
 
 const app = express();
 const PORT = process.env.UI_PORT || 4173;
+const HOST = process.env.UI_HOST || "0.0.0.0";
 const priceOracleService = new PriceOracleService();
 const tokenRegistryService = new TokenRegistryService();
 
@@ -32,6 +33,10 @@ function safeAsync(fn) {
     }
   };
 }
+
+app.get("/healthz", (req, res) => {
+  res.json({ ok: true, service: "clawdCombo-ui", host: HOST, port: Number(PORT) });
+});
 
 app.get(
   "/api/status",
@@ -152,6 +157,8 @@ app.post(
   })
 );
 
-app.listen(PORT, "127.0.0.1", () => {
-  console.log(`clawdCombo UI listening on http://127.0.0.1:${PORT}`);
+app.listen(PORT, HOST, () => {
+  const listenHost = HOST === "0.0.0.0" ? "localhost" : HOST;
+  console.log(`clawdCombo UI listening on http://${listenHost}:${PORT}`);
+  console.log(`health: http://${listenHost}:${PORT}/healthz`);
 });
