@@ -3,6 +3,7 @@ import { walletsView, bindWallets } from './wallets.js';
 import { tokensView, bindTokens } from './tokens.js';
 import { transferView, bindTransfer } from './transfer.js';
 import { portfolioView, bindPortfolio } from './portfolio.js';
+import { catalogView, bindCatalog } from './catalog.js';
 import { oraclesView, bindOracles } from './oracles.js';
 import { swapView, bindSwap } from './swap.js';
 import { arbView, bindArb } from './arb.js';
@@ -18,6 +19,7 @@ class ClawdComboApp {
         ${tokensView()}
         ${transferView()}
         ${portfolioView()}
+        ${catalogView()}
         ${oraclesView()}
         ${swapView()}
         ${arbView()}
@@ -30,6 +32,7 @@ class ClawdComboApp {
     bindTokens();
     bindTransfer();
     bindPortfolio();
+    bindCatalog();
     bindOracles();
     bindSwap();
     bindArb();

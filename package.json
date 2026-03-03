@@ -11,7 +11,8 @@
     "wallet:list": "node scripts/wallet-cli.js wallet:list",
     "tx:demo:local": "hardhat run scripts/tx-demo.js",
     "tx:demo:amoy": "node scripts/tx-amoy.js",
-    "ui:start": "node ui/server.js"
+    "ui:start": "node ui/server.js",
+    "catalog:sync": "node scripts/catalog-sync.js"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",

@@ -9,6 +9,7 @@ const { scanPairGap } = require("../cli/arb");
 const { scanWatchlist } = require("../cli/strategies/arb-watchlist");
 const { runOnce } = require("../cli/strategies/arb-runner");
 const { getWatchlist, saveWatchlist } = require("../cli/watchlist-registry");
+const { readCatalog, fetchTop200, saveCatalog } = require("../cli/catalog");
 const { executeSwap } = require("../cli/swap-exec");
 const { PriceOracleService } = require("../cli/services/PriceOracleService");
 const { TokenRegistryService } = require("../cli/services/TokenRegistryService");
@@ -45,6 +46,7 @@ app.get(
       liveSwap: process.env.ENABLE_LIVE_SWAP === "true",
     },
     watchlist: getWatchlist(),
+    catalog: readCatalog(),
   }))
 );
 
@@ -80,6 +82,16 @@ app.post(
 
 app.get("/api/tokens", safeAsync(async () => ({ tokens: tokenRegistryService.list() })));
 app.post("/api/tokens", safeAsync(async (req) => ({ tokens: tokenRegistryService.add(req.body || {}) })));
+
+app.get("/api/catalog/top200", safeAsync(async () => {
+  const existing = readCatalog();
+  return existing || { generatedAt: null, count: 0, items: [] };
+}));
+
+app.post("/api/catalog/top200/sync", safeAsync(async () => {
+  const items = await fetchTop200();
+  return saveCatalog(items);
+}));
 
 app.post(
   "/api/prices",
