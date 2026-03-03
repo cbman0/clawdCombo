@@ -1,0 +1,10 @@
+{
+  "name": "clawdcombo",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Furucombo-inspired DeFi strategy executor",
+  "scripts": {
+    "build": "echo 'configure build tool (hardhat/foundry) in next step'",
+    "test": "echo 'tests to be added'"
+  }
+}
