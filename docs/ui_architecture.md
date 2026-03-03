@@ -7,6 +7,9 @@ The HTML UI is split by single-purpose modules under `ui/public/modules`:
 - `transfer.js` — wallet-to-wallet transfer
 - `portfolio.js` — native + ERC20 balance checks
 - `swap.js` — swap quote retrieval (aggregator)
+- `tokens.js` — custom token registry management
+- `oracles.js` — multi-source price checks
+- `arb.js` — gap scanner + threshold trigger
 - `history.js` — transaction history viewer
 - `app.js` — main class-based composition entrypoint
 
