@@ -5,3 +5,4 @@ artifacts/
 coverage/
 .env
 .DS_Store
+.clawdcombo/

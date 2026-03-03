@@ -14,7 +14,8 @@ A Furucombo-inspired DeFi strategy executor focused on transparent, modular acti
 - [x] Repository scaffold
 - [x] Architecture + contract mapping notes
 - [x] Core contract stubs (`Router`, `Executor`, `AdapterRegistry`)
-- [ ] Local test harness + fork testing
+- [x] Local test harness + executable combo demo
+- [x] Wallet CLI with encrypted hidden backups
 - [ ] Polygon-first adapters (Aave/Uniswap/1inch style)
 - [ ] Strategy builder JSON format + compiler
 

@@ -6,10 +6,16 @@
   "scripts": {
     "build": "hardhat compile",
     "test": "hardhat test",
-    "demo": "hardhat run scripts/demoExecute.js"
+    "demo": "hardhat run scripts/demoExecute.js",
+    "wallet:create": "node scripts/wallet-cli.js wallet:create",
+    "wallet:list": "node scripts/wallet-cli.js wallet:list",
+    "tx:demo:local": "hardhat run scripts/tx-demo.js"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "hardhat": "^2.22.0"
+  },
+  "dependencies": {
+    "ethers": "^6.16.0"
   }
 }
