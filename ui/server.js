@@ -9,6 +9,7 @@ const { scanPairGap } = require("../cli/arb");
 const { scanWatchlist } = require("../cli/strategies/arb-watchlist");
 const { runOnce } = require("../cli/strategies/arb-runner");
 const { getWatchlist, saveWatchlist } = require("../cli/watchlist-registry");
+const { compileStrategy, validateStrategy } = require("../cli/strategies/compiler");
 const { readCatalog, fetchTop200, saveCatalog } = require("../cli/catalog");
 const { executeSwap } = require("../cli/swap-exec");
 const { PriceOracleService } = require("../cli/services/PriceOracleService");
@@ -154,6 +155,20 @@ app.post(
     const body = req.body || {};
     const cfg = body.pairs ? body : getWatchlist();
     return runOnce({ pairs: cfg.pairs || [], thresholdPct: Number(cfg.thresholdPct || 1) });
+  })
+);
+
+app.post(
+  "/api/strategy/compile",
+  safeAsync(async (req) => {
+    const strategy = req.body || {};
+    const validation = validateStrategy(strategy);
+    if (!validation.ok) {
+      const err = new Error(`invalid strategy: ${validation.errors.join('; ')}`);
+      err.validation = validation;
+      throw err;
+    }
+    return { validation, compiled: compileStrategy(strategy) };
   })
 );
 
