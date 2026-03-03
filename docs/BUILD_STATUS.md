@@ -33,7 +33,7 @@
 - [x] Strategy composer panel scaffold (Furucombo-inspired draft/validation UX)
 
 ## Next Milestones
-- [ ] Swap execution hardening (slippage/gas guardrails + post-trade deltas)
+- [x] Swap execution hardening (slippage/gas guardrails + post-trade deltas)
 - [ ] Oracle normalization + fallback reliability improvements
 - [ ] Watchlist scheduler (interval runner + optional alert hooks)
 - [ ] Strategy compiler (Furucombo-like JSON pipeline)
