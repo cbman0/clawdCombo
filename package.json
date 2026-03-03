@@ -2,16 +2,14 @@
   "name": "clawdcombo",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "description": "Furucombo-inspired DeFi strategy executor",
   "scripts": {
     "build": "hardhat compile",
-    "test": "hardhat test"
+    "test": "hardhat test",
+    "demo": "hardhat run scripts/demoExecute.js"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-ethers": "^4.0.5",
-    "chai": "^6.0.1",
-    "ethers": "^6.16.0",
-    "hardhat": "^3.1.10"
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.0"
   }
 }

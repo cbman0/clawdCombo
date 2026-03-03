@@ -1,0 +1,3 @@
+ACTIVE_PERSONALITY=blockchain_programmer_00
+SOURCE=/home/cbMan0/Documents/Personalities/blockChain_programmer_00.md
+UPDATE_FILE=docs/personality_update_blockchain_programmer.md
