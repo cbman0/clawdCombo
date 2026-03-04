@@ -3,9 +3,10 @@ const { ethers } = require("ethers");
 const { ERC20_ABI } = require("./constants");
 const { getWalletByAlias } = require("./wallets");
 const { appendTxLog } = require("./store");
+const guardrails = require("./guardrails");
+const { verifyBuyDelta } = require("./verification");
 
 const CHAIN_ID_AMOY = 80002;
-const DEFAULT_MAX_GAS = Number(process.env.MAX_SWAP_GAS || 900000);
 
 function provider() {
   const url = process.env.AMOY_RPC_URL || "https://rpc-amoy.polygon.technology";
@@ -33,8 +34,9 @@ function validateSwapInput({ sellToken, buyToken, sellAmount, slippageBps }) {
 
   const parsedAmount = parsePositiveBigInt(sellAmount, "sellAmount");
 
-  if (Number(slippageBps) < 1 || Number(slippageBps) > 500) {
-    throw new Error("slippageBps must be between 1 and 500");
+  const sBps = Number(slippageBps);
+  if (sBps < guardrails.MIN_SLIPPAGE_BPS || sBps > guardrails.MAX_SLIPPAGE_BPS) {
+    throw new Error(`slippageBps must be between ${guardrails.MIN_SLIPPAGE_BPS} and ${guardrails.MAX_SLIPPAGE_BPS}`);
   }
 
   const sellNative = isNativeToken(sellToken);
@@ -128,8 +130,8 @@ async function executeSwap({
   const quote = await fetchExecutableQuote({ sellToken, buyToken, sellAmount, takerAddress, slippageBps });
 
   const quoteGas = quote?.transaction?.gas ? Number(quote.transaction.gas) : null;
-  if (quoteGas && quoteGas > DEFAULT_MAX_GAS) {
-    throw new Error(`quote gas ${quoteGas} exceeds max allowed ${DEFAULT_MAX_GAS}`);
+  if (quoteGas && quoteGas > guardrails.MAX_GAS) {
+    throw new Error(`quote gas ${quoteGas} exceeds max allowed ${guardrails.MAX_GAS}`);
   }
 
   // Native sell path: no allowance required.
@@ -145,7 +147,7 @@ async function executeSwap({
         return {
           mode: "dry-run",
           needsApproval: true,
-          guardrails: { slippageBps: Number(slippageBps), maxGas: DEFAULT_MAX_GAS },
+          guardrails: { slippageBps: Number(slippageBps), maxGas: guardrails.MAX_GAS },
           quote,
           balancesBefore: { sell: sellBefore, buy: buyBefore },
           note: "Approval required before execution",
@@ -160,7 +162,7 @@ async function executeSwap({
   if (dryRun || process.env.ENABLE_LIVE_SWAP !== "true") {
     return {
       mode: "dry-run",
-      guardrails: { slippageBps: Number(slippageBps), maxGas: DEFAULT_MAX_GAS },
+      guardrails: { slippageBps: Number(slippageBps), maxGas: guardrails.MAX_GAS },
       quote,
       balancesBefore: { sell: sellBefore, buy: buyBefore },
       note: "Set ENABLE_LIVE_SWAP=true and dryRun=false to execute",
@@ -190,6 +192,9 @@ async function executeSwap({
     buy: computeDelta(buyBefore.raw, buyAfter.raw, buyBefore.decimals),
   };
 
+  // Post-trade delta verification
+  const verification = verifyBuyDelta(quote, deltas.buy.raw);
+
   const result = {
     mode: "live",
     hash: receipt.hash,
@@ -199,12 +204,13 @@ async function executeSwap({
     sellToken,
     buyToken,
     sellAmount,
-    guardrails: { slippageBps: Number(slippageBps), maxGas: DEFAULT_MAX_GAS },
+    guardrails: { slippageBps: Number(slippageBps), maxGas: guardrails.MAX_GAS },
     balances: {
       before: { sell: sellBefore, buy: buyBefore },
       after: { sell: sellAfter, buy: buyAfter },
       deltas,
     },
+    verification,
   };
 
   appendTxLog({
