@@ -36,5 +36,7 @@
 - [x] Swap execution hardening (slippage/gas guardrails + post-trade deltas)
 - [x] Oracle normalization + fallback reliability improvements
 - [x] Watchlist scheduler (interval runner + optional alert hooks)
-- [ ] Strategy compiler (Furucombo-like JSON pipeline)
-- [ ] Adapter expansion (Uniswap/1inch/Aave-style production adapters)
+- [x] Strategy compiler (Furucombo-like JSON pipeline)
+- [x] Adapter expansion (Uniswap V3 / 1inch / Aave V3 Flashloan scaffolds)
+- [ ] End-to-end strategy execution hardening
+- [ ] Production adapter contract integration
