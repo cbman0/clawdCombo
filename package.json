@@ -6,6 +6,9 @@
   "scripts": {
     "build": "hardhat compile",
     "test": "hardhat test",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "commit": "bash tools/commit_helper.sh",
     "demo": "hardhat run scripts/demoExecute.js",
     "wallet:create": "node scripts/wallet-cli.js wallet:create",
     "wallet:list": "node scripts/wallet-cli.js wallet:list",
@@ -14,13 +17,17 @@
     "ui:start": "node ui/server.js",
     "catalog:sync": "node scripts/catalog-sync.js",
     "watchlist:scheduler": "node scripts/watchlist-scheduler.js",
-    "desktop:start": "node desktop/launcher.js"
+    "desktop:start": "node desktop/launcher.js",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "electron": "^31.7.7",
+    "eslint": "^10.0.2",
     "hardhat": "^2.22.0",
-    "wait-on": "^7.2.0"
+    "prettier": "^3.8.1",
+    "wait-on": "^7.2.0",
+    "husky": "^8.0.0"
   },
   "dependencies": {
     "dotenv": "^16.6.1",
