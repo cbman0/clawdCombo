@@ -1,3 +1,4 @@
+import { api } from './api.js';
 import { toast } from './notify.js';
 
 const STORAGE_KEY = 'clawdcombo:strategyDraft';
@@ -86,25 +87,15 @@ export function bindCombo() {
     }
   };
 
-  document.getElementById('comboValidateBtn').onclick = () => {
+  document.getElementById('comboValidateBtn').onclick = async () => {
     try {
       const parsed = JSON.parse(jsonEl.value);
-      if (!parsed.flashloan || !Array.isArray(parsed.actions) || parsed.actions.length < 1) {
-        throw new Error('strategy requires flashloan object and at least one action');
-      }
-      out.textContent = JSON.stringify({
-        ok: true,
-        checks: {
-          hasFlashloan: true,
-          actionCount: parsed.actions.length,
-          hasRepay: !!parsed.repay,
-        },
-        next: 'Ready for compiler integration endpoint'
-      }, null, 2);
-      toast('Strategy shape validated', 'success');
+      const result = await api('/api/strategy/compile', 'POST', parsed);
+      out.textContent = JSON.stringify(result, null, 2);
+      toast('Strategy compiled successfully', 'success');
     } catch (e) {
       out.textContent = JSON.stringify({ ok: false, error: e.message }, null, 2);
-      toast('Validation failed', 'error');
+      toast(`Strategy compilation failed: ${e.message}`, 'error');
     }
   };
 
