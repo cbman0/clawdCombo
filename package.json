@@ -23,7 +23,13 @@
     "deploy:adapters:amoy": "hardhat run scripts/deploy-adapters.js --network amoy",
     "deploy:adapters:sepolia": "hardhat run scripts/deploy-adapters.js --network sepolia",
     "verify:adapters": "node scripts/verify-adapters.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "deploy:core:mainnet": "hardhat run scripts/deploy-core.js --network mainnet",
+    "deploy:core:amoy": "hardhat run scripts/deploy-core.js --network amoy",
+    "deploy:core:sepolia": "hardhat run scripts/deploy-core.js --network sepolia",
+    "deploy:full:mainnet": "hardhat run scripts/deploy-full.js --network mainnet",
+    "deploy:full:amoy": "hardhat run scripts/deploy-full.js --network amoy",
+    "deploy:full:sepolia": "hardhat run scripts/deploy-full.js --network sepolia"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
