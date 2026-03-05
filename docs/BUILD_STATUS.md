@@ -24,26 +24,43 @@
 - [x] Arbitrage pair scanner + threshold
 - [x] Arbitrage watchlist persistence + runner metrics
 - [x] Top-200 catalog sync + UI panel
-
-## In Progress (Current Focus)
 - [x] Modern UI redesign (premium/production look)
 - [x] Easy Mode vs Advanced Mode UX split
 - [x] Swap desk polish (Uniswap-style interaction flow)
 - [x] Portfolio panel polish (Rainbow-style readability)
-- [x] Strategy composer panel scaffold (Furucombo-inspired draft/validation UX)
+- [x] Strategy composer panel scaffold (Furucombo-inspired)
 
-## Next Milestones
-- [x] Swap execution hardening (slippage/gas guardrails + post-trade deltas)
-- [x] Oracle normalization + fallback reliability improvements
-- [x] Watchlist scheduler (interval runner + optional alert hooks)
-- [x] Strategy compiler (Furucombo-like JSON pipeline)
-- [x] Adapter expansion (Uniswap V3 / 1inch / Aave V3 Flashloan scaffolds)
+## ✅ Completed (March 5, 2026)
+- [x] Swap execution hardening (slippage/gas guardrails)
+- [x] Oracle normalization + fallback reliability
+- [x] Watchlist scheduler (interval runner + alerts)
+- [x] Adapter expansion (Uniswap V3 / 1inch / Aave V3)
 - [x] SushiSwap adapter contract
 - [x] QuickSwap adapter contract
 - [x] AaveV3FlashloanAdapter hardening (input validation, max amount, whitelist)
 - [x] UniswapV3Adapter hardening (slippage protection, fee tiers, max amount)
 - [x] OneInchAdapter hardening (input validation, slippage, DEX flags)
-- [ ] End-to-end strategy execution hardening
-- [ ] Production adapter contract integration
-- [ ] Strategy builder JSON format
-- [ ] Strategy compiler implementation
+- [x] Strategy builder JSON format (draft)
+
+## 🚧 In Progress
+- Strategy compiler implementation
+- Unit tests for adapters
+
+## 📋 Pending
+- End-to-end strategy execution hardening
+- Production adapter contract integration
+- Strategy compiler final implementation
+
+## 📊 Quick Reference
+| Feature | Status |
+|--------------------------------------|---------|
+| Wallet create/list + encrypted backups | ✅ Done |
+| Wallet-to-wallet Amoy transfer | ✅ Done |
+| Swap quote + execute pipeline | ✅ Done |
+| Custom token registry | ✅ Done |
+| Arb pair scan + watchlist | ✅ Done |
+| Swap execution hardening | ✅ Done |
+| Adapter expansion (5 protocols) | ✅ Done |
+| Strategy builder JSON | ✅ Done |
+| Strategy compiler | 🔄 In Progress |
+| Unit tests | 🔄 In Progress |
