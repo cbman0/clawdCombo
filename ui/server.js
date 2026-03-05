@@ -6,7 +6,6 @@ const { listWallets, createWallet } = require("../cli/wallets");
 const { transferAmoy, nativeBalance, tokenBalance, quoteSwap } = require("../cli/amoy");
 const { readTxLog } = require("../cli/store");
 const { scanPairGap } = require("../cli/arb");
-const { scanWatchlist } = require("../cli/strategies/arb-watchlist");
 const { runOnce } = require("../cli/strategies/arb-runner");
 const { getWatchlist, saveWatchlist } = require("../cli/watchlist-registry");
 const { compileStrategy, validateStrategy } = require("../cli/strategies/compiler");

@@ -1,6 +1,6 @@
 {
   "name": "clawdcombo",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "private": true,
   "description": "Furucombo-inspired DeFi strategy executor",
   "scripts": {
@@ -8,7 +8,7 @@
     "test": "hardhat test",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "commit": "bash tools/commit_helper.sh",
+    "commit": "node tools/commit-helper.js",
     "demo": "hardhat run scripts/demoExecute.js",
     "wallet:create": "node scripts/wallet-cli.js wallet:create",
     "wallet:list": "node scripts/wallet-cli.js wallet:list",
@@ -18,6 +18,11 @@
     "catalog:sync": "node scripts/catalog-sync.js",
     "watchlist:scheduler": "node scripts/watchlist-scheduler.js",
     "desktop:start": "node desktop/launcher.js",
+    "health:watchdog": "node tools/health-watchdog.js",
+    "deploy:adapters:mainnet": "hardhat run scripts/deploy-adapters.js --network mainnet",
+    "deploy:adapters:amoy": "hardhat run scripts/deploy-adapters.js --network amoy",
+    "deploy:adapters:sepolia": "hardhat run scripts/deploy-adapters.js --network sepolia",
+    "verify:adapters": "node scripts/verify-adapters.js",
     "prepare": "husky install"
   },
   "devDependencies": {
@@ -27,10 +32,12 @@
     "globals": "^17.4.0",
     "hardhat": "^2.22.0",
     "husky": "^8.0.0",
+    "lint-staged": "^16.3.2",
     "prettier": "^3.8.1",
     "wait-on": "^7.2.0"
   },
   "dependencies": {
+    "@openzeppelin/contracts": "^5.6.1",
     "dotenv": "^16.6.1",
     "ethers": "^6.16.0",
     "express": "^4.22.1"

@@ -1,5 +1,3 @@
-const { ethers } = require("ethers");
-
 const ONEINCH_ROUTER = "0x1111111254fb6c44bac0bed2854e76f90643097d";
 
 async function getOneInchQuote({ sellToken, buyToken, sellAmount, chainId = 80002 }) {

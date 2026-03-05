@@ -1,4 +1,13 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npx eslint . && npx prettier --check .
+echo "🔍 Running lint-staged checks..."
+npx lint-staged
+
+exit_code=$?
+if [ $exit_code -ne 0 ]; then
+  echo "❌ Linting failed. Please fix the above issues before committing."
+  exit 1
+fi
+
+echo "✅ All linting checks passed!"
