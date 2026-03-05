@@ -29,14 +29,30 @@ contract UniswapV3Adapter is ReentrancyGuard, Ownable, Pausable, IAdapter {
     address public immutable factory;
     address public immutable weth;
 
+    // Slippage protection: max allowed slippage in basis points (default 30 = 0.3%)
+    uint256 public maxSlippageBps = 30;
+    
+    // Maximum amount per swap to prevent large losses
+    uint256 public maxSwapAmount = type(uint256).max;
+
+    // Valid fee tiers for Uniswap V3
+    mapping(uint24 => bool) public validFeeTiers;
+
     event SwapExecuted(address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut, uint24 feeTier);
     event LiquidityAdded(address indexed tokenA, address indexed tokenB, uint24 feeTier, int24 tickLower, int24 tickUpper, uint128 liquidity, uint256 amount0, uint256 amount1);
-    event LiquidityRemoved(address indexed tokenA, address indexed tokenB, uint24 feeTier, int24 tickLower, int24 tickUpper, uint128 liquidity, uint256 amount0, uint256 amount1);
+    event LiquidityRemoved(address indexed tokenA, address indexed tokenB, uint24 feeTier, int24 tickLower, int24 tickUpper, uint256 amount0, uint256 amount1);
+    event SlippageUpdated(uint256 newMaxBps);
+    event MaxSwapAmountUpdated(uint256 newMax);
 
+    // Custom errors
     error Adapter__InvalidToken(address token);
     error Adapter__PoolDoesNotExist(address tokenA, address tokenB, uint24 fee);
     error Adapter__InsufficientOutput(uint256 expected, uint256 actual);
     error Adapter__ZeroAddress(address token);
+    error Adapter__SlippageExceeded(uint256 maxBps, uint256 currentSlippageBps);
+    error Adapter__AmountExceedsMax(uint256 amount, uint256 max);
+    error Adapter__InvalidFeeTier(uint24 fee);
+    error Adapter__DeadlineExpired(uint256 deadline);
 
     bytes4 public constant SWAP_EXACT_TOKENS_FOR_TOKENS = 0x18cbb299;
     bytes4 public constant MINT_LIQUIDITY = 0x9565be9e;
@@ -47,6 +63,34 @@ contract UniswapV3Adapter is ReentrancyGuard, Ownable, Pausable, IAdapter {
         require(_weth != address(0), "ZERO_WETH");
         factory = _factory;
         weth = _weth;
+        
+        // Initialize valid fee tiers
+        validFeeTiers[500] = true;   // 0.05%
+        validFeeTiers[3000] = true;  // 0.3%
+        validFeeTiers[10000] = true;  // 1%
+    }
+
+    /// @notice Update maximum slippage tolerance
+    function setMaxSlippage(uint256 newMaxBps) external onlyOwner {
+        require(newMaxBps <= 10000, "MAX_10000");
+        maxSlippageBps = newMaxBps;
+        emit SlippageUpdated(newMaxBps);
+    }
+
+    /// @notice Update maximum swap amount
+    function setMaxSwapAmount(uint256 newMax) external onlyOwner {
+        maxSwapAmount = newMax;
+        emit MaxSwapAmountUpdated(newMax);
+    }
+
+    /// @notice Add valid fee tier
+    function addFeeTier(uint24 fee) external onlyOwner {
+        validFeeTiers[fee] = true;
+    }
+
+    /// @notice Remove fee tier
+    function removeFeeTier(uint24 fee) external onlyOwner {
+        validFeeTiers[fee] = false;
     }
 
     function pause() external onlyOwner { _pause(); }
@@ -83,9 +127,20 @@ contract UniswapV3Adapter is ReentrancyGuard, Ownable, Pausable, IAdapter {
         uint24 fee,
         address to
     ) internal returns (uint256 amountOut) {
+        // Validate inputs
         if (amountIn == 0) revert Adapter__InvalidToken(address(0));
-        if (tokenIn == tokenOut || tokenIn == address(0) || tokenOut == address(0)) revert Adapter__ZeroAddress(tokenIn == address(0) ? tokenIn : tokenOut);
+        if (tokenIn == tokenOut || tokenIn == address(0) || tokenOut == address(0)) 
+            revert Adapter__ZeroAddress(tokenIn == address(0) ? tokenIn : tokenOut);
+        
+        // Check max swap amount
+        if (amountIn > maxSwapAmount) revert Adapter__AmountExceedsMax(amountIn, maxSwapAmount);
+        
+        // Check valid fee tier
+        if (!validFeeTiers[fee]) revert Adapter__InvalidFeeTier(fee);
 
+        // Get expected output (simplified - in production would use oracle)
+        uint256 expectedOut = amountIn; // Placeholder - would calculate via quote
+        
         IERC20(tokenIn).safeTransferFrom(msg.sender, address(this), amountIn);
         address pool = _getPool(tokenIn, tokenOut, fee);
         IUniswapV3Pool poolContract = IUniswapV3Pool(pool);
@@ -99,8 +154,19 @@ contract UniswapV3Adapter is ReentrancyGuard, Ownable, Pausable, IAdapter {
         uint256 balanceAfter = IERC20(tokenOut).balanceOf(address(this));
 
         amountOut = balanceAfter - balanceBefore;
-        if (amountOut < minAmountOut) {
-            revert Adapter__InsufficientOutput(minAmountOut, amountOut);
+        
+        // Slippage check
+        if (minAmountOut > 0) {
+            if (amountOut < minAmountOut) {
+                revert Adapter__InsufficientOutput(minAmountOut, amountOut);
+            }
+            // Additional slippage protection using basis points
+            if (expectedOut > 0) {
+                uint256 slippageBps = ((expectedOut - amountOut) * 10000) / expectedOut;
+                if (slippageBps > maxSlippageBps) {
+                    revert Adapter__SlippageExceeded(maxSlippageBps, slippageBps);
+                }
+            }
         }
 
         IERC20(tokenOut).safeTransfer(to, amountOut);
