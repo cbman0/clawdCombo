@@ -13,16 +13,36 @@ interface IOneInchRouter {
         external payable returns (uint256 returnAmount);
 }
 
+/// @title OneInchAdapter
+/// @notice Adapter for 1inch DEX aggregator with hardened input validation
 contract OneInchAdapter is ReentrancyGuard, Ownable, Pausable, IAdapter {
     using SafeERC20 for IERC20;
 
     address public immutable router;
     address public immutable weth;
 
-    event SwapExecuted(address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut, bytes data);
+    // Slippage protection
+    uint256 public maxSlippageBps = 30; // 0.3% default
+    
+    // Maximum swap amount
+    uint256 public maxSwapAmount = type(uint256).max;
 
+    // Supported DEX flags for 1inch
+    mapping(uint256 => bool) public allowedDexFlags;
+
+    event SwapExecuted(address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut, bytes data);
+    event SlippageUpdated(uint256 newMaxBps);
+    event MaxSwapAmountUpdated(uint256 newMax);
+    event DexFlagUpdated(uint256 flags, bool allowed);
+
+    // Custom errors
     error Adapter__InvalidToken(address token);
     error Adapter__InsufficientReturn(uint256 expected, uint256 actual);
+    error Adapter__AmountExceedsMax(uint256 amount, uint256 max);
+    error Adapter__SlippageExceeded(uint256 maxBps, uint256 currentBps);
+    error Adapter__ZeroAddress();
+    error Adapter__ZeroAmount();
+    error Adapter__DexFlagNotAllowed(uint256 flags);
 
     bytes4 public constant SWAP_EXACT_TOKENS_FOR_TOKENS = 0x18cbb299;
     bytes4 public constant SWAP_EXACT_ETH_FOR_TOKENS = 0x7ff36ab5;
@@ -33,6 +53,42 @@ contract OneInchAdapter is ReentrancyGuard, Ownable, Pausable, IAdapter {
         require(_weth != address(0), "ZERO_WETH");
         router = _router;
         weth = _weth;
+        
+        // Allow common DEX flags (0 = all DEXes)
+        allowedDexFlags[0] = true;
+    }
+
+    /// @notice Update maximum slippage tolerance
+    function setMaxSlippage(uint256 newMaxBps) external onlyOwner {
+        require(newMaxBps <= 10000, "MAX_10000");
+        maxSlippageBps = newMaxBps;
+        emit SlippageUpdated(newMaxBps);
+    }
+
+    /// @notice Update maximum swap amount
+    function setMaxSwapAmount(uint256 newMax) external onlyOwner {
+        maxSwapAmount = newMax;
+        emit MaxSwapAmountUpdated(newMax);
+    }
+
+    /// @notice Enable/disable DEX flag
+    function setDexFlag(uint256 flags, bool allowed) external onlyOwner {
+        allowedDexFlags[flags] = allowed;
+        emit DexFlagUpdated(flags, allowed);
+    }
+
+    /// @notice Validate swap parameters
+    function _validateSwapParams(
+        uint256 amountIn,
+        uint256 minAmountOut,
+        address tokenIn,
+        address tokenOut,
+        uint256 flags
+    ) internal view {
+        if (amountIn == 0) revert Adapter__ZeroAmount();
+        if (tokenIn == address(0) || tokenOut == address(0)) revert Adapter__ZeroAddress();
+        if (amountIn > maxSwapAmount) revert Adapter__AmountExceedsMax(amountIn, maxSwapAmount);
+        if (!allowedDexFlags[flags] && flags != 0) revert Adapter__DexFlagNotAllowed(flags);
     }
 
     function pause() external onlyOwner { _pause(); }
