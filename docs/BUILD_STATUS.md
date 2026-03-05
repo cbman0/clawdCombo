@@ -38,5 +38,12 @@
 - [x] Watchlist scheduler (interval runner + optional alert hooks)
 - [x] Strategy compiler (Furucombo-like JSON pipeline)
 - [x] Adapter expansion (Uniswap V3 / 1inch / Aave V3 Flashloan scaffolds)
+- [x] SushiSwap adapter contract
+- [x] QuickSwap adapter contract
+- [x] AaveV3FlashloanAdapter hardening (input validation, max amount, whitelist)
+- [x] UniswapV3Adapter hardening (slippage protection, fee tiers, max amount)
+- [x] OneInchAdapter hardening (input validation, slippage, DEX flags)
 - [ ] End-to-end strategy execution hardening
 - [ ] Production adapter contract integration
+- [ ] Strategy builder JSON format
+- [ ] Strategy compiler implementation
